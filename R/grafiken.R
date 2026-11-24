@@ -8,9 +8,12 @@ library(ggplot2)
 # Zweck:   Zeichnet die ganze Schneehöhenreihe einer Station. Wo Messwerte
 #          fehlen, ist die Linie unterbrochen und am unteren Rand steht ein
 #          oranger Strich pro fehlendem Tag.
-# Eingabe: tage_station (Tagesformat, eine Station, lückenlos), titel
+# Eingabe: tage_station (Tagesformat, eine Station, lückenlos), titel,
+#          achsenabstand (Abstand der Jahresbeschriftung, z. B. "10 years";
+#          für kurze Zeiträume in der Oberfläche kleiner)
 # Ausgabe: ggplot-Objekt
-zeichne_schneehoehenreihe <- function(tage_station, titel) {
+zeichne_schneehoehenreihe <- function(tage_station, titel,
+                                      achsenabstand = "10 years") {
   if (all(is.na(tage_station$hs_cm))) {
     stop("Keine Messwerte zum Zeichnen: ", titel, call. = FALSE)
   }
@@ -23,7 +26,7 @@ zeichne_schneehoehenreihe <- function(tage_station, titel) {
     geom_line(colour = "#0072B2", linewidth = 0.3, na.rm = TRUE) +
     geom_rug(data = fehlend, aes(x = datum), inherit.aes = FALSE,
              sides = "b", colour = "#D55E00") +
-    scale_x_date(date_breaks = "10 years", date_labels = "%Y") +
+    scale_x_date(date_breaks = achsenabstand, date_labels = "%Y") +
     labs(title = titel,
          subtitle = "Orange Striche unten: Tage ohne Messwert",
          x = "Jahr", y = "Schneehöhe (cm)",
