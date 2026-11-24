@@ -1,0 +1,87 @@
+---
+title: "Schneehöhe interaktiv"
+---
+
+Station und Zeitraum wählen; die Grafik zeigt sofort nur diesen Ausschnitt.
+Mit der Maus (oder dem Finger) über die Linie fahren zeigt Datum und
+Schneehöhe. Gestrichelt: Schwellenwert für einen Schneetag. Orange Striche
+unten: Tage ohne Messwert.
+
+```{r}
+#| label: daten
+# R liest die Daten wie überall (siehe _laden.R) und gibt sie mit
+# ojs_define() an den JavaScript-Teil weiter. Gerechnet wird nur hier in R;
+# JavaScript filtert und zeichnet nur.
+source("_laden.R")
+
+ojs_define(
+  tageswerte = tage |>
+    mutate(jahr = as.integer(format(datum, "%Y")),
+           datum = format(datum, "%Y-%m-%d")) |>
+    select(station_id, datum, jahr, hs_cm),
+  stationsinfo = stationen |>
+    transmute(station_id,
+              name = paste0(station_name, " (", station_id, ", ",
+                            hoehe_station_m, " m ü. M.)")),
+  schwelle = parameter$schwellenwert_cm
+)
+```
+
+```{ojs}
+//| label: auswahl
+// Ab hier JavaScript (Observable JS, in Quarto eingebaut).
+// transpose() macht aus den Spalten von R eine Liste von Tagen.
+tage = transpose(tageswerte).map(d => ({...d, datum: new Date(d.datum)}))
+stationen = transpose(stationsinfo)
+
+// Auswahlfeld: angezeigt wird der Name, weitergegeben das Kürzel
+viewof station = Inputs.select(stationen.map(s => s.station_id), {
+  label: "Station",
+  format: id => stationen.find(s => s.station_id === id).name
+})
+
+// Erstes und letztes Jahr der gewählten Station für die Schieberegler
+jahre = d3.extent(tage.filter(d => d.station_id === station), d => d.jahr)
+
+viewof von = Inputs.range(jahre, {label: "von Jahr", step: 1, value: jahre[0]})
+viewof bis = Inputs.range(jahre, {label: "bis Jahr", step: 1, value: jahre[1]})
+```
+
+```{ojs}
+//| label: grafik
+// Tage der gewählten Station im gewählten Zeitraum
+auswahl = tage.filter(d =>
+  d.station_id === station && d.jahr >= von && d.jahr <= bis)
+fehlend = auswahl.filter(d => d.hs_cm === null)
+hoechster = d3.max(auswahl, d => d.hs_cm) ?? schwelle
+
+// Kurze Zeiträume mit Tag und Monat beschriften, lange nur mit dem Jahr
+beschriftung = bis - von <= 2 ? "%d.%m.%Y" : "%Y"
+
+von > bis
+  ? md`**«von Jahr» muss kleiner oder gleich «bis Jahr» sein.**`
+  : Plot.plot({
+      width,
+      height: 400,
+      marginLeft: 50,
+      x: {label: "Datum", type: "utc", tickFormat: beschriftung},
+      y: {label: "Schneehöhe (cm)", grid: true, domain: [0, hoechster]},
+      marks: [
+        // Linie der Schneehöhe; bei fehlenden Werten unterbrochen
+        Plot.lineY(auswahl, {x: "datum", y: "hs_cm", stroke: "#0072B2",
+                             strokeWidth: 0.8}),
+        // Schwellenwert aus R/parameter.R
+        Plot.ruleY([schwelle], {stroke: "#555", strokeDasharray: "4,3"}),
+        // Orange Striche unten: Tage ohne Messwert
+        Plot.ruleX(fehlend, {x: "datum", y1: 0, y2: hoechster * 0.03,
+                             stroke: "#D55E00"}),
+        // Hinweis mit Datum und Wert beim Darüberfahren
+        Plot.tip(auswahl, Plot.pointerX({
+          x: "datum", y: "hs_cm",
+          title: d => d.datum.toLocaleDateString("de-CH", {timeZone: "UTC"}) +
+            ": " + (d.hs_cm === null ? "kein Messwert" : d.hs_cm + " cm")
+        }))
+      ],
+      caption: "Quelle: MeteoSchweiz"
+    })
+```

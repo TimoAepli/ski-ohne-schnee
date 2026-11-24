@@ -18,6 +18,8 @@ website:
         text: Start
       - href: stationen.qmd
         text: Stationen
+      - href: interaktiv.qmd
+        text: Schneehöhe interaktiv
   page-footer:
     center: "Daten: Quelle: MeteoSchweiz (CC BY 4.0) · IDPA BM 1, GBS St. Gallen"
 
