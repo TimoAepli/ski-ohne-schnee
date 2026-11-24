@@ -75,6 +75,30 @@ test_that("ganz fehlende Kalendertage werden als NA ergänzt", {
   expect_equal(tage$hs_cm, c(40, NA, NA, 44))
 })
 
+test_that("Tage vor dem ersten Schneehöhen-Wert werden weggelassen", {
+  ordner <- neuer_testordner()
+  schreibe_testdatei(ordner, "TST", "historical",
+                     c("TST;01.12.1970 00:00;0;0;",
+                       "TST;02.12.1970 00:00;0;0;",
+                       "TST;03.12.1970 00:00;0;0;20",
+                       "TST;04.12.1970 00:00;0;0;"))
+  schreibe_testdatei(ordner, "TST", "recent", "TST;05.12.1970 00:00;0;0;25")
+  expect_message(
+    tage <- lies_station_meteoschweiz("TST", ordner, parameter),
+    "Messbeginn Schneehöhe 03.12.1970: 2 Tag")
+  expect_equal(tage$datum[1], as.Date("1970-12-03"))
+  # Lücke nach dem Messbeginn bleibt NA
+  expect_equal(tage$hs_cm, c(20, NA, 25))
+})
+
+test_that("Station ganz ohne Schneehöhe führt zu Fehler", {
+  ordner <- neuer_testordner()
+  schreibe_testdatei(ordner, "TST", "historical", "TST;01.12.1970 00:00;0;0;")
+  schreibe_testdatei(ordner, "TST", "recent", "TST;02.12.1970 00:00;0;0;")
+  expect_error(lies_station_meteoschweiz("TST", ordner, parameter),
+               "Keine Schneehöhe")
+})
+
 test_that("Text statt Zahl in der Schneehöhe führt zu Fehler", {
   ordner <- neuer_testordner()
   schreibe_testdatei(ordner, "TST", "historical", "TST;01.12.1970 00:00;0;0;abc")
