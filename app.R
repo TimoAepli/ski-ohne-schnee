@@ -2,8 +2,8 @@
 # Lokale Oberfläche zum Ansehen der Resultate (FA-31).
 # Start in RStudio: diese Datei öffnen, oben auf «Run App» klicken.
 # Start ohne RStudio, im Projektordner: Rscript -e "shiny::runApp()"
-# Online (GitHub Pages): Rscript webseite_bauen.R ausführen und den Ordner
-# webseite/ mitcommitten. Die App läuft dann ohne R-Server im Browser.
+# Die öffentliche Webseite ist eine eigene, statische Quarto-Seite
+# (Ordner webseite/); diese App läuft nur lokal.
 #
 # Die Oberfläche rechnet nichts Eigenes: Sie ruft dieselben Funktionen auf
 # wie run_all.R und zeigt deren Ergebnis an.
@@ -11,30 +11,20 @@
 library(shiny)
 
 source("R/parameter.R", encoding = "UTF-8")
+source("R/einlesen.R", encoding = "UTF-8")
 source("R/pruefen.R", encoding = "UTF-8")
 source("R/grafiken.R", encoding = "UTF-8")
 
 
 # --- Daten einmal beim Start laden -------------------------------------------
-# Online gibt es die Datei app_daten.rds: webseite_bauen.R hat die Rohdaten
-# dort schon eingelesen, das spart im Browser viel Zeit. Lokal fehlt sie,
-# dann lesen wir die Rohdaten wie run_all.R selbst ein.
 # Geht dabei etwas schief (fehlende Datei, falsches Format), merken wir uns
 # die Fehlermeldung und zeigen sie in jeder Registerkarte an.
-vorberechnet <- "daten/aufbereitet/app_daten.rds"
 ladefehler <- NULL
 stationen <- NULL
 tage <- NULL
 tryCatch({
-  if (file.exists(vorberechnet)) {
-    daten <- readRDS(vorberechnet)
-    stationen <- daten$stationen
-    tage <- daten$tage
-  } else {
-    source("R/einlesen.R", encoding = "UTF-8")
-    stationen <- lies_stationen("daten/manuell/stationen.csv")
-    tage <- lies_alle_stationen(stationen, "daten/roh/meteoschweiz", parameter)
-  }
+  stationen <- lies_stationen("daten/manuell/stationen.csv")
+  tage <- lies_alle_stationen(stationen, "daten/roh/meteoschweiz", parameter)
 }, error = function(e) {
   ladefehler <<- conditionMessage(e)
 })
@@ -141,11 +131,7 @@ server <- function(input, output, session) {
     # Ohne Lücken wäre die Grafik leer; dann lieber eine klare Meldung
     validate(need(any(daten$tage_ohne_messwert > 0),
                   "Keine fehlenden Tage im gewählten Zeitraum."))
-    ggplot(daten, aes(x = jahr, y = tage_ohne_messwert)) +
-      geom_col(fill = "#D55E00") +
-      labs(title = paste("Tage ohne Messwert,", stationsname()),
-           x = "Jahr", y = "Tage ohne Messwert (Dez. bis Apr.)") +
-      theme_minimal(base_size = 11)
+    zeichne_datenluecken(daten, paste("Tage ohne Messwert,", stationsname()))
   })
 
   output$tabelle_luecken <- renderTable({
