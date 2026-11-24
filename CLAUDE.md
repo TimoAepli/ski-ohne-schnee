@@ -24,9 +24,10 @@ Du unterstützt, wir schreiben die Methode selbst.
 - Sprache R. Funktionsnamen, Kommentare und Grafikbeschriftungen auf Deutsch,
   Schweizer Rechtschreibung (ss statt ß).
 - Erlaubte Pakete: readr, dplyr, tidyr, lubridate, ggplot2, zoo, trend,
-  testthat, shiny. Weitere Pakete nur nach Rückfrage.
+  testthat, shiny, shinylive. Weitere Pakete nur nach Rückfrage.
 - `daten/roh/` wird nie verändert. Geschrieben wird nur nach
-  `daten/aufbereitet/` und `ausgabe/`.
+  `daten/aufbereitet/` und `ausgabe/`, ausserdem `webseite/` (nur durch
+  `webseite_bauen.R`).
 - Fehlende Messwerte sind `NA`, nie 0.
 - Keine festen Werte im Code: Schwellenwert, Saisonfenster, Startwinter,
   Höhenklassen und Vollständigkeitsgrenze stehen in `R/parameter.R`.
@@ -59,6 +60,10 @@ tests/              testthat-Tests (TC-01 bis TC-15 aus den Anforderungen)
 ausgabe/            grafiken/, tabellen/
 docs/               anforderungen.md, ki-protokoll.md
 run_all.R           startet die ganze Kette
+app.R               Shiny-Oberfläche zum Ansehen der Resultate
+webseite_bauen.R    wandelt app.R mit shinylive in eine statische Webseite um
+webseite/           erzeugte Webseite, wird committet, Vercel liefert sie aus
+vercel.json         sagt Vercel: kein Build, Ordner webseite/ ausliefern
 ```
 
 ## Arbeitsweise
