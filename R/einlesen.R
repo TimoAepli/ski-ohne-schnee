@@ -103,6 +103,28 @@ entferne_doppelte_tage <- function(tage) {
   ohne_doppelte
 }
 
+# Zweck:   Lässt die Tage vor dem ersten Schneehöhen-Wert weg. Die Dateien
+#          beginnen oft Jahrzehnte früher, weil andere Grössen (z. B.
+#          Niederschlag) schon länger gemessen werden; diese Tage sind keine
+#          Lücken der Schneemessung. Wie viele Tage wegfallen, wird gemeldet.
+# Eingabe: Tabelle im Tagesformat (eine Station)
+# Ausgabe: Tabelle im Tagesformat, beginnend am Tag des ersten Messwerts;
+#          Fehler, wenn die Station gar keinen Schneehöhen-Wert hat
+ab_messbeginn <- function(tage) {
+  if (all(is.na(tage$hs_cm))) {
+    stop("Keine Schneehöhe in den Dateien von ",
+         paste(unique(tage$station_id), collapse = ", "), call. = FALSE)
+  }
+  messbeginn <- min(tage$datum[!is.na(tage$hs_cm)])
+  ab_beginn <- filter(tage, datum >= messbeginn)
+  weggelassen <- nrow(tage) - nrow(ab_beginn)
+  if (weggelassen > 0) {
+    message("  Messbeginn Schneehöhe ", format(messbeginn, "%d.%m.%Y"), ": ",
+            weggelassen, " Tag(e) davor ohne Messwert weggelassen")
+  }
+  ab_beginn
+}
+
 # Zweck:   Fügt für Kalendertage, die in der Datei ganz fehlen, eine Zeile
 #          mit hs_cm = NA ein. So ist jede Lücke sichtbar.
 # Eingabe: Tabelle im Tagesformat
@@ -138,7 +160,8 @@ lies_station_meteoschweiz <- function(station_id, ordner, parameter) {
     stop("Dateien von ", station_id, " enthalten eine andere Station: ",
          paste(fremd, collapse = ", "), call. = FALSE)
   }
-  tage |> entferne_doppelte_tage() |> ergaenze_fehlende_tage()
+  tage |> entferne_doppelte_tage() |> ab_messbeginn() |>
+    ergaenze_fehlende_tage()
 }
 
 # Zweck:   Liest die Tageswerte aller Stationen der Stationsliste.
