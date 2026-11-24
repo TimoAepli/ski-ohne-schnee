@@ -1,0 +1,3 @@
+gebiet;bergbahn;region;station_id;station_name;quelle;hoehe_station_m;hoehe_tal_m;hoehe_berg_m;distanz_km;bemerkung
+;;Ostschweiz;ELM;Elm;MeteoSchweiz;958;;;;Schneehöhe laut Dateninventar ab 01.01.1949. Gewählt statt Wildhaus (WHA), weil dort 1981 bis 1997 alle Werte fehlen
+;;Graubünden;ARO;Arosa;MeteoSchweiz;1878;;;;Schneehöhe laut Dateninventar ab 01.07.1949. Ab 16.12.2015 ist das SLF Dateneigner. Standort- oder Methodenwechsel noch nicht geprüft
