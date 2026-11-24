@@ -1,9 +1,10 @@
 # pages.yml
-# Zweck:   Stellt die fertig gebaute Webseite (Ordner webseite/) auf
-#          GitHub Pages. Hier wird nichts gebaut: Die Seite erzeugen wir
-#          lokal mit webseite_bauen.R und committen sie.
-# Auslöser: jeder Push auf master, der webseite/ verändert, oder von Hand
-#          unter «Actions» → «GitHub Pages» → «Run workflow».
+# Zweck:   Baut die Quarto-Webseite (Ordner webseite/) auf einem Server von
+#          GitHub und stellt sie auf GitHub Pages. R liest dabei die
+#          Rohdaten und zeichnet alle Grafiken; die fertige Seite ist
+#          statisch und lädt ohne R.
+# Auslöser: jeder Push auf master, der Seite, R-Code oder Daten verändert,
+#          oder von Hand unter «Actions» → «GitHub Pages» → «Run workflow».
 # Voraussetzung: Im Repo unter Settings → Pages bei «Source» die Option
 #          «GitHub Actions» wählen.
 
@@ -14,6 +15,8 @@ on:
     branches: [master]
     paths:
       - "webseite/**"
+      - "R/**"
+      - "daten/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -30,22 +33,45 @@ concurrency:
 # Zwei Jobs: Der zweite startet erst, wenn der Upload ganz abgeschlossen ist.
 # In einem einzigen Job fand das Veröffentlichen das Paket manchmal noch nicht.
 jobs:
-  hochladen:
+  bauen:
     runs-on: ubuntu-latest
     steps:
       - name: Repo auschecken
         uses: actions/checkout@v7
 
+      - name: R installieren
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      # Installiert die Pakete und merkt sie sich für den nächsten Lauf
+      - name: R-Pakete installieren
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::readr
+            any::dplyr
+            any::tidyr
+            any::ggplot2
+            any::knitr
+            any::rmarkdown
+
+      - name: Quarto installieren
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Webseite bauen
+        run: quarto render webseite
+
       - name: Pages einrichten
         uses: actions/configure-pages@v6
 
-      - name: Ordner webseite/ hochladen
+      - name: Fertige Seite hochladen
         uses: actions/upload-pages-artifact@v4
         with:
-          path: webseite
+          path: webseite/_site
 
   veroeffentlichen:
-    needs: hochladen
+    needs: bauen
     runs-on: ubuntu-latest
     environment:
       name: github-pages
