@@ -1,0 +1,4 @@
+/.quarto/
+**/*.quarto_ipynb
+# Erzeugte Seite: wird auf GitHub gebaut, nicht committen
+/_site/

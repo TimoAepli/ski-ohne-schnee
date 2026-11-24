@@ -1,0 +1,45 @@
+---
+title: "Ski ohne Schnee?"
+subtitle: "Schneesicherheit in Skigebieten der Ostschweiz und Graubündens"
+---
+
+```{r}
+#| label: laden
+source("_laden.R")
+```
+
+Diese Seite zeigt die Daten und Zwischenresultate unserer IDPA
+(BM 1, GBS St. Gallen). Grundlage sind die täglichen Schneehöhen der
+MeteoSchweiz. Alle Grafiken und Tabellen werden mit denselben R-Funktionen
+erzeugt wie in unserer Auswertung (`run_all.R`); die Seite rechnet nichts
+Eigenes.
+
+## Stationen
+
+```{r}
+#| label: stationsliste
+erster_wert <- tage |>
+  filter(!is.na(hs_cm)) |>
+  group_by(station_id) |>
+  summarise(von = min(datum), bis = max(datum))
+
+stationen |>
+  left_join(erster_wert, by = "station_id") |>
+  transmute(Station = station_name, Kürzel = station_id, Region = region,
+            `Höhe (m ü. M.)` = hoehe_station_m,
+            `Messwerte von` = format(von, "%d.%m.%Y"),
+            `bis` = format(bis, "%d.%m.%Y")) |>
+  knitr::kable()
+```
+
+Die Schneehöhenreihen, Datenlücken und Auffälligkeiten jeder Station stehen
+unter [Stationen](stationen.qmd).
+
+## Stand
+
+- Eingelesen und geprüft: Tageswerte der MeteoSchweiz
+- Folgt: Kennzahlen K1 bis K4 (Schneetage, Vollständigkeit, schneesichere
+  Winter, 100-Tage-Regel), Trends und Wirtschaftsdaten
+
+Stand der Daten: `r format(max(tage$datum), "%d.%m.%Y")`.
+Quelle: MeteoSchweiz.

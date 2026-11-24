@@ -1,0 +1,36 @@
+# _quarto.yml
+# Einstellungen der Quarto-Webseite. Bauen aus dem Projektordner:
+#   quarto render webseite
+# Ergebnis: webseite/_site/ (wird nicht committet; GitHub baut die Seite
+# selbst, siehe .github/workflows/pages.yml)
+
+project:
+  type: website
+  output-dir: _site
+
+lang: de
+
+website:
+  title: "Ski ohne Schnee?"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Start
+      - href: stationen.qmd
+        text: Stationen
+  page-footer:
+    center: "Daten: Quelle: MeteoSchweiz (CC BY 4.0) · IDPA BM 1, GBS St. Gallen"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    # Vektorgrafiken: scharf bei jeder Vergrösserung
+    fig-format: svg
+    fig-width: 10
+    fig-height: 4.8
+
+execute:
+  echo: false
+  warning: false
+  message: false

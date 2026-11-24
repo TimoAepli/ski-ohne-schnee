@@ -1,0 +1,78 @@
+---
+title: "Stationen"
+---
+
+```{r}
+#| label: laden
+source("_laden.R")
+```
+
+Pro Station: die ganze Schneehöhenreihe, die Tage ohne Messwert zwischen
+1. Dezember und 30. April und die Meldungen der Plausibilitätsprüfung.
+Die gestrichelte Linie zeigt den Schwellenwert für einen Schneetag
+(`r parameter$schwellenwert_cm` cm, aus `R/parameter.R`).
+
+```{r}
+#| label: stationen
+#| results: asis
+
+# Zweck:   Schreibt den Abschnitt einer Station mit drei Registerkarten.
+# Eingabe: id (Stationskürzel)
+# Ausgabe: keine; schreibt Markdown und Grafiken in die Seite
+schreibe_station <- function(id) {
+  zeile <- stationen[stationen$station_id == id, ]
+  name <- paste0(zeile$station_name, " (", id, ", ",
+                 zeile$hoehe_station_m, " m ü. M.)")
+  tage_station <- filter(tage, station_id == id)
+  uebersicht <- datenuebersicht(tage_station, parameter$uebersicht_monate)
+  meldungen <- pruefe_tageswerte(tage_station, parameter$pruef_obergrenze_cm,
+                                 parameter$pruef_sprung_cm)
+
+  cat("\n\n## ", name, "\n\n", sep = "")
+  if (!is.na(zeile$bemerkung) && zeile$bemerkung != "") {
+    cat(zeile$bemerkung, "\n\n")
+  }
+  cat("::: {.panel-tabset}\n\n")
+
+  cat("### Schneehöhe\n\n")
+  print(zeichne_schneehoehenreihe(tage_station, paste("Schneehöhe", name)) +
+          geom_hline(yintercept = parameter$schwellenwert_cm,
+                     linetype = "dashed", colour = "grey30"))
+  cat("\n\n")
+
+  cat("### Datenlücken\n\n")
+  if (any(uebersicht$tage_ohne_messwert > 0)) {
+    print(zeichne_datenluecken(uebersicht, paste("Tage ohne Messwert,", name)))
+    cat("\n\n")
+  } else {
+    cat("Keine fehlenden Tage zwischen Dezember und April.\n\n")
+  }
+  tabelle <- uebersicht |>
+    select(Jahr = jahr, `Tage mit Messwert` = tage_mit_messwert,
+           `Tage ohne Messwert` = tage_ohne_messwert)
+  cat("::: {.callout-note collapse=\"true\"}\n## Tabelle pro Jahr\n\n")
+  cat(knitr::kable(tabelle), sep = "\n")
+  cat("\n:::\n\n")
+
+  cat("### Auffälligkeiten\n\n")
+  if (nrow(meldungen) == 0) {
+    cat("Keine Auffälligkeiten (Obergrenze ", parameter$pruef_obergrenze_cm,
+        " cm, Tagessprung über ", parameter$pruef_sprung_cm, " cm).\n\n",
+        sep = "")
+  } else {
+    meldungen |>
+      mutate(datum = format(datum, "%d.%m.%Y")) |>
+      select(Datum = datum, `Schneehöhe (cm)` = hs_cm, Prüfung = pruefung,
+             Detail = detail) |>
+      knitr::kable() |>
+      cat(sep = "\n")
+    cat("\n\n")
+  }
+
+  cat(":::\n\n")
+}
+
+for (id in stationen$station_id) {
+  schreibe_station(id)
+}
+```
