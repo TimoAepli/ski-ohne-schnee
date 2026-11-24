@@ -1,0 +1,8 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Erzeugte Dateien (lassen sich mit run_all.R neu herstellen)
+daten/aufbereitet/
+ausgabe/
