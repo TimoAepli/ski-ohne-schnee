@@ -60,7 +60,8 @@ R/                  parameter.R, einlesen.R, pruefen.R, kennzahlen.R,
                     statistik.R, grafiken.R
 tests/              testthat-Tests (TC-01 bis TC-15 aus den Anforderungen)
 ausgabe/            grafiken/, tabellen/
-docs/               anforderungen.md, ki-protokoll.md
+docs/               anforderungen.md, technik.md, ki-protokoll.md
+README.md           Einstieg: Ziele, Stand, Schnellstart, Struktur
 run_all.R           startet die ganze Kette
 app.R               Shiny-Oberfläche zum Ansehen der Resultate (nur lokal)
 webseite/           Quarto-Webseite (statisch): _quarto.yml, *.qmd, _laden.R;
@@ -80,7 +81,34 @@ navbar eintragen. Code in den Seiten ruft nur Funktionen aus R/ auf.
 
 - Ein Arbeitspaket pro Sitzung, kleine Schritte. Vor grösseren Änderungen
   kurz den Plan nennen und auf unser OK warten.
-- Nicht committen; das machen wir nach dem Durchlesen selbst.
-- Am Ende jeder Sitzung einen Eintrag für `docs/ki-protokoll.md`
-  vorschlagen: Datum, Zweck, Umfang (welche Dateien und Funktionen),
-  zentraler Prompt. Wir brauchen das für das KI-Verzeichnis der Arbeit.
+- Committen ist erlaubt, aber nie mit dir als Autor oder Co-Autor (kein
+  `Co-Authored-By`, kein anderer Autor). Kurze Commit-Messages auf
+  Deutsch, eine Zeile; lieber mehrere kleine Commits, ein Thema pro Commit.
+  Pushen nur, wenn wir es verlangen.
+- `docs/ki-protokoll.md` nachführen: pro Sitzung ein Eintrag mit Datum,
+  Zweck, Umfang (welche Dateien und Funktionen), zentralem Prompt. Wir
+  brauchen das für das KI-Verzeichnis der Arbeit.
+
+## Dokumentation nachführen (Pflicht)
+
+Code und Dokumentation bleiben immer auf demselben Stand. Wer etwas ändert,
+führt die Dokumentation im selben Arbeitsschritt und im selben oder
+direkt folgenden Commit nach, nicht später.
+
+| Änderung | Nachführen in |
+|---|---|
+| Funktion neu, umbenannt, entfernt oder Ein-/Ausgabe geändert | Kommentarkopf der Funktion, `docs/technik.md` Kap. 4 |
+| Parameter in `R/parameter.R` | `docs/technik.md` Kap. 6 |
+| Datenformat, neue Datenquelle, Rohdateien | `docs/technik.md` Kap. 5, `daten/roh/QUELLEN.md`, README «Daten und Quellen» |
+| Prüfregel oder Umgang mit Lücken | `docs/technik.md` Kap. 7 |
+| Ausgabedatei neu oder geändert | `docs/technik.md` Kap. 8 |
+| Webseite, Workflow, Bauen | `docs/technik.md` Kap. 9, README «Verwendung» |
+| Tests neu oder Stand geändert | `docs/technik.md` Kap. 10 |
+| Grundsätzlicher Entscheid (Werkzeug, Aufbau, Regel) | neuer Eintrag in `docs/technik.md` Kap. 11 (Kontext – Entscheid – Folgen) |
+| Arbeitspaket fertig, Station neu, Ziel geändert | README «Stand» und «Ziele» |
+| Paket, Ordner, Befehl neu | README «Schnellstart»/«Projektstruktur», diese Datei |
+| Offener Punkt erledigt oder neu | `docs/technik.md` Kap. 13 |
+
+Bei jeder Änderung das Datum «Stand» oben in `docs/technik.md`
+aktualisieren. Was die Anforderungsanalyse betrifft (Kennzahlen,
+Rechenregeln), nicht selbst ändern, sondern nachfragen.
