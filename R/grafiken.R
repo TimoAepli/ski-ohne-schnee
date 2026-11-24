@@ -33,3 +33,15 @@ zeichne_schneehoehenreihe <- function(tage_station, titel,
          caption = "Quelle: MeteoSchweiz") +
     theme_minimal(base_size = 11)
 }
+
+# Zweck:   Zeichnet pro Jahr die Tage ohne Messwert als Balken.
+# Eingabe: uebersicht (Ausgabe von datenuebersicht(), eine Station), titel
+# Ausgabe: ggplot-Objekt
+zeichne_datenluecken <- function(uebersicht, titel) {
+  ggplot(uebersicht, aes(x = jahr, y = tage_ohne_messwert)) +
+    geom_col(fill = "#D55E00") +
+    labs(title = titel, x = "Jahr",
+         y = "Tage ohne Messwert (Dez. bis Apr.)",
+         caption = "Quelle: MeteoSchweiz") +
+    theme_minimal(base_size = 11)
+}
