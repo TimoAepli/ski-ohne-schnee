@@ -24,10 +24,10 @@ Du unterstützt, wir schreiben die Methode selbst.
 - Sprache R. Funktionsnamen, Kommentare und Grafikbeschriftungen auf Deutsch,
   Schweizer Rechtschreibung (ss statt ß).
 - Erlaubte Pakete: readr, dplyr, tidyr, lubridate, ggplot2, zoo, trend,
-  testthat, shiny, shinylive. Weitere Pakete nur nach Rückfrage.
+  testthat, shiny, knitr, rmarkdown. Weitere Pakete nur nach Rückfrage.
 - `daten/roh/` wird nie verändert. Geschrieben wird nur nach
-  `daten/aufbereitet/` und `ausgabe/`, ausserdem `webseite/` (nur durch
-  `webseite_bauen.R`).
+  `daten/aufbereitet/` und `ausgabe/`, ausserdem `webseite/_site/` (nur
+  durch `quarto render webseite`).
 - Fehlende Messwerte sind `NA`, nie 0.
 - Keine festen Werte im Code: Schwellenwert, Saisonfenster, Startwinter,
   Höhenklassen und Vollständigkeitsgrenze stehen in `R/parameter.R`.
@@ -60,10 +60,18 @@ tests/              testthat-Tests (TC-01 bis TC-15 aus den Anforderungen)
 ausgabe/            grafiken/, tabellen/
 docs/               anforderungen.md, ki-protokoll.md
 run_all.R           startet die ganze Kette
-app.R               Shiny-Oberfläche zum Ansehen der Resultate
-webseite_bauen.R    wandelt app.R mit shinylive in eine statische Webseite um
-webseite/           erzeugte Webseite, wird committet, GitHub Pages liefert sie aus
-.github/workflows/  pages.yml: stellt webseite/ bei jedem Push auf GitHub Pages
+app.R               Shiny-Oberfläche zum Ansehen der Resultate (nur lokal)
+webseite/           Quarto-Webseite (statisch): _quarto.yml, *.qmd, _laden.R;
+                    gebaut nach webseite/_site/ (nicht committet)
+.github/workflows/  pages.yml: baut webseite/ bei jedem Push und stellt sie
+                    auf GitHub Pages
+```
+
+Lokal bauen und ansehen: `quarto preview webseite`
+
+```text
+Neue Seite: webseite/<name>.qmd anlegen und in webseite/_quarto.yml unter
+navbar eintragen. Code in den Seiten ruft nur Funktionen aus R/ auf.
 ```
 
 ## Arbeitsweise
