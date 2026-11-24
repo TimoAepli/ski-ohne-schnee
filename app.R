@@ -2,7 +2,7 @@
 # Lokale Oberfläche zum Ansehen der Resultate (FA-31).
 # Start in RStudio: diese Datei öffnen, oben auf «Run App» klicken.
 # Start ohne RStudio, im Projektordner: Rscript -e "shiny::runApp()"
-# Online (Vercel): Rscript webseite_bauen.R ausführen und den Ordner
+# Online (GitHub Pages): Rscript webseite_bauen.R ausführen und den Ordner
 # webseite/ mitcommitten. Die App läuft dann ohne R-Server im Browser.
 #
 # Die Oberfläche rechnet nichts Eigenes: Sie ruft dieselben Funktionen auf

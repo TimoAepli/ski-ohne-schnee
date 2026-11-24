@@ -1,14 +1,15 @@
 # webseite_bauen.R
 # Zweck:   Wandelt die Shiny-Oberfläche (app.R) mit dem Paket shinylive in
 #          eine statische Webseite um. R läuft dann im Browser (webR), es
-#          braucht keinen R-Server. So kann Vercel die App ausliefern.
+#          braucht keinen R-Server. So kann GitHub Pages die App ausliefern.
 # Eingabe: app.R, R/, daten/manuell/stationen.csv, Tageswerte in
 #          daten/roh/meteoschweiz/
-# Ausgabe: Ordner webseite/ (wird committet, Vercel liefert ihn aus)
+# Ausgabe: Ordner webseite/ (wird committet, GitHub Pages liefert ihn aus,
+#          siehe .github/workflows/pages.yml)
 #
 # Aufruf aus dem Projektordner: Rscript webseite_bauen.R
 # Nach jeder Änderung an app.R, R/ oder den Daten neu ausführen und den
-# Ordner webseite/ mitcommitten, sonst zeigt Vercel den alten Stand.
+# Ordner webseite/ mitcommitten, sonst zeigt GitHub Pages den alten Stand.
 
 if (!file.exists("app.R")) {
   stop("webseite_bauen.R muss aus dem Projektordner gestartet werden.",

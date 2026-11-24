@@ -62,8 +62,8 @@ docs/               anforderungen.md, ki-protokoll.md
 run_all.R           startet die ganze Kette
 app.R               Shiny-Oberfläche zum Ansehen der Resultate
 webseite_bauen.R    wandelt app.R mit shinylive in eine statische Webseite um
-webseite/           erzeugte Webseite, wird committet, Vercel liefert sie aus
-vercel.json         sagt Vercel: kein Build, Ordner webseite/ ausliefern
+webseite/           erzeugte Webseite, wird committet, GitHub Pages liefert sie aus
+.github/workflows/  pages.yml: stellt webseite/ bei jedem Push auf GitHub Pages
 ```
 
 ## Arbeitsweise

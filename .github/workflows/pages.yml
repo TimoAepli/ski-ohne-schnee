@@ -1,0 +1,50 @@
+# pages.yml
+# Zweck:   Stellt die fertig gebaute Webseite (Ordner webseite/) auf
+#          GitHub Pages. Hier wird nichts gebaut: Die Seite erzeugen wir
+#          lokal mit webseite_bauen.R und committen sie.
+# Auslöser: jeder Push auf master, der webseite/ verändert, oder von Hand
+#          unter «Actions» → «GitHub Pages» → «Run workflow».
+# Voraussetzung: Im Repo unter Settings → Pages bei «Source» die Option
+#          «GitHub Actions» wählen.
+
+name: GitHub Pages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "webseite/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Nur eine Veröffentlichung gleichzeitig; eine laufende nicht abbrechen
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  veroeffentlichen:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: Pages einrichten
+        uses: actions/configure-pages@v5
+
+      - name: Ordner webseite/ hochladen
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: webseite
+
+      - name: Auf GitHub Pages veröffentlichen
+        id: deployment
+        uses: actions/deploy-pages@v4

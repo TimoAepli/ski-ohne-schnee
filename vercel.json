@@ -1,6 +1,0 @@
-{
-  "framework": null,
-  "installCommand": "echo Keine Installation noetig",
-  "buildCommand": "echo Kein Build noetig: webseite/ wird lokal mit webseite_bauen.R erzeugt",
-  "outputDirectory": "webseite"
-}
