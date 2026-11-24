@@ -6,7 +6,7 @@ Nov 11, 2026 · @Matteo
 
 Das Programm berechnet aus täglichen Schneehöhen pro Station und Winter die Schneesicherheitskennzahlen und liefert alle Tabellen und Grafiken, die wir für die Teilfragen 1 bis 4 und die Hypothesen H1 bis H3 brauchen. Es ist ein Werkzeug der Methode, nicht das Produkt der IDPA: Bewertet wird die schriftliche Arbeit.
 
-Das Programm ist eine Skript-Pipeline in R ohne Benutzeroberfläche.
+Das Programm ist eine Skript-Pipeline in R. Dazu kommt eine lokale Oberfläche mit dem Paket `shiny`, in der man die Resultate ansehen kann (FA-31).
 
 **Im Umfang**
 
@@ -22,6 +22,8 @@ Das Programm ist eine Skript-Pipeline in R ohne Benutzeroberfläche.
 
 - Grafiken und Tabellen in druckfähiger Qualität exportieren
 
+- Lokale Oberfläche (Shiny) zum Ansehen der Resultate
+
 **Nicht im Umfang**
 
 - Automatisches Auslesen von Geschäftsberichten (PDF): Die Zahlen erfassen wir von Hand in einer CSV-Datei
@@ -30,7 +32,7 @@ Das Programm ist eine Skript-Pipeline in R ohne Benutzeroberfläche.
 
 - Modellierung der technischen Beschneiung
 
-- Benutzeroberfläche, Webanwendung, Datenbank
+- Im Internet veröffentlichte Webanwendung (die Shiny-Oberfläche läuft nur lokal), Datenbank
 
 - Kausale Aussagen: Das Programm liefert Zusammenhänge, die Deutung gehört in die Diskussion
 
@@ -184,7 +186,7 @@ $$r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum (x_i - \bar{x})^2 \,
 
 ## 5 Funktionale Anforderungen
 
-Von 27 Anforderungen sind 22 Muss, 4 Soll und 1 Kann; die Muss-Anforderungen reichen, um alle vier Teilfragen zu beantworten. Der Ablauf ist eine gerade Kette, die mit einem einzigen Befehl durchläuft:
+Von 28 Anforderungen sind 22 Muss, 4 Soll und 2 Kann; die Muss-Anforderungen reichen, um alle vier Teilfragen zu beantworten. Der Ablauf ist eine gerade Kette, die mit einem einzigen Befehl durchläuft:
 
 1.  Konfiguration und Stationsliste laden
 
@@ -255,6 +257,7 @@ Von 27 Anforderungen sind 22 Muss, 4 Soll und 1 Kann; die Muss-Anforderungen rei
 | FA-27 | Alle Grafiken aus Kapitel 7 als PDF und PNG exportieren, einheitlicher Stil | Muss | I2 |
 | FA-28 | Kennzahlentabellen als CSV exportieren | Muss | I3 |
 | FA-29 | Laufprotokoll schreiben: Datum, Parameter, Stationen, Datenstand, Anzahl gültige Winter, Auffälligkeiten | Soll | E4, E5 |
+| FA-31 | Lokale Oberfläche mit Shiny zum Ansehen der Resultate; sie verwendet dieselben Funktionen wie die Pipeline und rechnet nichts eigenes | Kann | Coachgespräch |
 
 Nicht nummeriert, aber offen: FA-25 braucht Betriebstage für mindestens ein tiefes und ein hohes Gebiet über mehrere Jahre. Ob die Geschäftsberichte das hergeben, wissen wir erst nach der Sichtung.
 

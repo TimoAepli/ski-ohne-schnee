@@ -24,7 +24,7 @@ Du unterstützt, wir schreiben die Methode selbst.
 - Sprache R. Funktionsnamen, Kommentare und Grafikbeschriftungen auf Deutsch,
   Schweizer Rechtschreibung (ss statt ß).
 - Erlaubte Pakete: readr, dplyr, tidyr, lubridate, ggplot2, zoo, trend,
-  testthat. Weitere Pakete nur nach Rückfrage.
+  testthat, shiny. Weitere Pakete nur nach Rückfrage.
 - `daten/roh/` wird nie verändert. Geschrieben wird nur nach
   `daten/aufbereitet/` und `ausgabe/`.
 - Fehlende Messwerte sind `NA`, nie 0.
@@ -34,7 +34,7 @@ Du unterstützt, wir schreiben die Methode selbst.
 - Spaltennamen und Parameterkennungen der MeteoSchweiz- und SLF-Dateien aus
   den Dateien und Metadaten ablesen, nicht raten.
 - Kurze Funktionen mit je einem Kommentar zu Zweck, Eingabe und Ausgabe.
-  Kein Gerüst auf Vorrat (kein renv, keine YAML-Konfiguration, kein Shiny).
+  Kein Gerüst auf Vorrat (kein renv, keine YAML-Konfiguration).
 - Fehlende Datei, unbekannte Station oder falsches Spaltenformat führen zu
   einer klaren Fehlermeldung, nicht zu einem Resultat.
 
