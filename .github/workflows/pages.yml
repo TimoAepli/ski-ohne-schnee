@@ -27,12 +27,11 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# Zwei Jobs: Der zweite startet erst, wenn der Upload ganz abgeschlossen ist.
+# In einem einzigen Job fand das Veröffentlichen das Paket manchmal noch nicht.
 jobs:
-  veroeffentlichen:
+  hochladen:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Repo auschecken
         uses: actions/checkout@v7
@@ -45,6 +44,13 @@ jobs:
         with:
           path: webseite
 
+  veroeffentlichen:
+    needs: hochladen
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Auf GitHub Pages veröffentlichen
         id: deployment
         uses: actions/deploy-pages@v4
