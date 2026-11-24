@@ -36,6 +36,8 @@ Du unterstützt, wir schreiben die Methode selbst.
   den Dateien und Metadaten ablesen, nicht raten.
 - Kurze Funktionen mit je einem Kommentar zu Zweck, Eingabe und Ausgabe.
   Kein Gerüst auf Vorrat (kein renv, keine YAML-Konfiguration).
+- JavaScript nur als Observable JS in `webseite/interaktiv.qmd`, und dort
+  nur zum Filtern und Zeichnen. Gerechnet wird ausschliesslich in R.
 - Fehlende Datei, unbekannte Station oder falsches Spaltenformat führen zu
   einer klaren Fehlermeldung, nicht zu einem Resultat.
 
