@@ -11,20 +11,30 @@
 library(shiny)
 
 source("R/parameter.R", encoding = "UTF-8")
-source("R/einlesen.R", encoding = "UTF-8")
 source("R/pruefen.R", encoding = "UTF-8")
 source("R/grafiken.R", encoding = "UTF-8")
 
 
 # --- Daten einmal beim Start laden -------------------------------------------
+# Online gibt es die Datei app_daten.rds: webseite_bauen.R hat die Rohdaten
+# dort schon eingelesen, das spart im Browser viel Zeit. Lokal fehlt sie,
+# dann lesen wir die Rohdaten wie run_all.R selbst ein.
 # Geht dabei etwas schief (fehlende Datei, falsches Format), merken wir uns
 # die Fehlermeldung und zeigen sie in jeder Registerkarte an.
+vorberechnet <- "daten/aufbereitet/app_daten.rds"
 ladefehler <- NULL
 stationen <- NULL
 tage <- NULL
 tryCatch({
-  stationen <- lies_stationen("daten/manuell/stationen.csv")
-  tage <- lies_alle_stationen(stationen, "daten/roh/meteoschweiz", parameter)
+  if (file.exists(vorberechnet)) {
+    daten <- readRDS(vorberechnet)
+    stationen <- daten$stationen
+    tage <- daten$tage
+  } else {
+    source("R/einlesen.R", encoding = "UTF-8")
+    stationen <- lies_stationen("daten/manuell/stationen.csv")
+    tage <- lies_alle_stationen(stationen, "daten/roh/meteoschweiz", parameter)
+  }
 }, error = function(e) {
   ladefehler <<- conditionMessage(e)
 })
