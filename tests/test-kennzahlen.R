@@ -90,3 +90,21 @@ test_that("TC-10: 6 Winter mit 100 und 4 mit 99 Schneetagen: nicht schneesicher"
   expect_equal(fenster$anteil_schneesicher, 0.6)
   expect_false(fenster$schneesicher)
 })
+
+# --- FA-14 Höhenklassen ------------------------------------------------------
+
+test_that("FA-14: Höhenklassen mit Grenzen 1500 und 2000 m", {
+  klasse <- hoehenklasse(c(958, 1499, 1500, 1878, 2000, 2001, NA),
+                         parameter$hoehenklassen_grenzen,
+                         parameter$hoehenklassen_namen)
+  expect_equal(as.character(klasse),
+               c("unter 1500 m", "unter 1500 m", "1500 bis 2000 m",
+                 "1500 bis 2000 m", "1500 bis 2000 m", "über 2000 m", NA))
+  expect_equal(levels(klasse), parameter$hoehenklassen_namen)
+})
+
+test_that("FA-14: falsche Eingabe führt zu Fehlermeldung", {
+  expect_error(hoehenklasse("958", c(1500, 2000), c("a", "b", "c")), "Zahl")
+  expect_error(hoehenklasse(958, c(1500, 2000), c("a", "b")), "Höhenklassen")
+  expect_error(hoehenklasse(958, c(2000, 1500), c("a", "b", "c")), "Höhenklassen")
+})
