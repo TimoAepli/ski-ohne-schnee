@@ -1,7 +1,7 @@
 # Technische Dokumentation
 
 Auswertungsprogramm «Ski ohne Schnee?»
-Stand: 24.11.2026 · Gilt für den Stand von `master`
+Stand: 25.11.2026 · Gilt für den Stand von `master`
 
 Diese Dokumentation beschreibt, wie das Programm aufgebaut ist und
 funktioniert. *Was* es berechnen muss (Kennzahlen, Rechenregeln,
@@ -129,6 +129,16 @@ Ausgabe. Diese Tabelle gibt den Überblick.
 Kommentarköpfe für K1 bis K4 (`zaehle_schneetage`,
 `berechne_vollstaendigkeit`, `ist_schneesicher`, `hundert_tage_regel`).
 Die Funktionen schreibt das Team; die Tests TC-01 bis TC-10 stehen bereit.
+
+| Funktion | Zweck |
+|---|---|
+| `hoehenklasse(hoehe_m, grenzen, namen)` | teilt Stationshöhen in Höhenklassen ein (FA-14); genau 1500 m und genau 2000 m gehören zu «1500 bis 2000 m» |
+
+### R/statistik.R
+
+| Funktion | Zweck |
+|---|---|
+| `trendtest(werte, parameter)` | Mann-Kendall-Test mit Bindungskorrektur und Sen-Steigung mit dem Paket `trend` (K7, FA-16); Ausgabe n, S, Var(S), Z, p-Wert, Steigung pro Winter und pro Jahrzehnt, signifikant, Hinweis. Reihe ohne Veränderung: «kein Trend berechenbar» (TC-12). Reihe mit `NA`, unter 3 Werten oder Text: Fehler |
 
 ### R/parameter.R
 
@@ -275,7 +285,8 @@ erzeugt kleine künstliche Testdaten.
 |---|---|---|
 | `test-einlesen.R` | TC-14 (fehlende Spalte, Datei, Quelle), `NA` statt 0, Überschneidung, doppelte Tage, Ergänzen fehlender Tage, Messbeginn, Text statt Zahl | 10 von 10 bestehen |
 | `test-pruefen.R` | Meldungen der Plausibilitätsprüfung, Datenübersicht | 6 von 6 bestehen |
-| `test-kennzahlen.R` | TC-01 bis TC-10 für K1 bis K4 | schlagen fehl, bis K1 bis K4 geschrieben sind (gewollt) |
+| `test-kennzahlen.R` | TC-01 bis TC-10 für K1 bis K4; Höhenklassen (FA-14) | TC-01 bis TC-10 schlagen fehl, bis K1 bis K4 geschrieben sind (gewollt); Höhenklassen 2 von 2 bestehen |
+| `test-statistik.R` | TC-11, TC-12 (Trendtest), Fehlerfälle | Fehlerfälle bestehen; TC-11 und TC-12 werden übersprungen, wenn das Paket `trend` fehlt (noch auf einem Rechner mit `trend` laufen lassen) |
 
 Ausführen: `Rscript -e "testthat::test_dir('tests')"`
 
@@ -336,3 +347,6 @@ Datei und, falls betroffen, im [README](../README.md) nachgeführt.
 | Februar oder April als Vergleichsfenster zum Dezember | E11 |
 | Quellenangabe SLF für Arosa ab 16.12.2015 | QUELLEN.md |
 | Lizenz für den eigenen Code | – |
+| Umgang mit ungültigen Wintern in der Trendreihe: `trendtest` verlangt eine lückenlose Reihe; das Paket `trend` rechnet die Sen-Steigung mit gleichen Abständen. Weglassen verzerrt die Abstände, darum vorerst Fehlermeldung | K7, FA-16, E5 |
+| TC-11 und TC-12 auf einem Rechner mit Paket `trend` laufen lassen | FA-16 |
+| Zuordnung genau 2000 m: zu «1500 bis 2000 m» (Wortlaut FA-14 «1500 bis 2000 m», «über 2000 m»); bestätigen | FA-14 |

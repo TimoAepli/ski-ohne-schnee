@@ -54,8 +54,9 @@ mindestens 7 von 10 aufeinanderfolgenden Wintern schneesicher sind.
 | Arbeitspaket | Inhalt | Stand |
 |---|---|---|
 | AP1–AP3 | Stationen, Projektgerüst, Einlesen und Prüfen der MeteoSchweiz-Daten | erledigt (SLF offen) |
-| AP4 | Kennzahlen K1 bis K4, Höhenklassen | in Arbeit, Tests TC-01 bis TC-10 vorhanden |
-| AP5–AP8 | Trends, Sensitivität, Wirtschaftsdaten, Grafiken G1 bis G10 | offen |
+| AP4 | Kennzahlen K1 bis K4, Höhenklassen | in Arbeit; Höhenklassen (FA-14) erledigt, Tests TC-01 bis TC-10 vorhanden |
+| AP5 | Trendtest (FA-16), Grafiken G1 bis G6 | Trendtest-Funktion und Tests TC-11, TC-12 vorhanden; Grafiken offen |
+| AP6–AP8 | Sensitivität, Wirtschaftsdaten, Grafiken G7 bis G10 | offen |
 | Webseite | Statische Quarto-Seite mit Stationen und interaktiver Grafik | online |
 
 Ausgewertete Stationen: Elm (958 m) und Arosa (1878 m), Schneehöhe ab 1949.
@@ -105,7 +106,7 @@ in [R/parameter.R](R/parameter.R).
 ```text
 ski-ohne-schnee/
 ├── R/                   Funktionen: parameter, einlesen, pruefen,
-│                        kennzahlen, grafiken
+│                        kennzahlen, statistik, grafiken
 ├── daten/
 │   ├── roh/             Originaldateien, werden nie verändert
 │   ├── manuell/         stationen.csv (von uns gepflegt)
