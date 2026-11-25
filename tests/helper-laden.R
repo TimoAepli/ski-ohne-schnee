@@ -6,6 +6,7 @@ source("../R/parameter.R", encoding = "UTF-8")
 source("../R/einlesen.R", encoding = "UTF-8")
 source("../R/pruefen.R", encoding = "UTF-8")
 source("../R/kennzahlen.R", encoding = "UTF-8")
+source("../R/statistik.R", encoding = "UTF-8")
 
 # Zweck:   Schreibt eine kleine künstliche MeteoSchweiz-Tagesdatei.
 # Eingabe: ordner, station (z. B. "TST"), teil ("historical" oder "recent"),
